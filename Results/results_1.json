@@ -1,6 +1,6 @@
 {
   "testPageHasTitle": "check",
-  "testHeaderExists": "fail",
+  "testHeaderExists": "check",
   "testPaginationWorks": "check"
 }
 
