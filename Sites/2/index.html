@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f8f9fa;
+    }
+
+    header {
+      background: #ff5722;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      font-size: 24px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 30px auto;
+      padding: 0 15px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.2s;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    .card img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .card h3 {
+      margin: 10px 0 5px;
+    }
+
+    .card p {
+      flex: 1;
+      font-size: 14px;
+      color: #555;
+    }
+
+    .price {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .btn {
+      background: #ff5722;
+      color: white;
+      border: none;
+      padding: 8px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background: #e64a19;
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: center;
+      margin: 30px 0;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .pagination button {
+      padding: 6px 12px;
+      border: 1px solid #ddd;
+      background: white;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    .pagination button.active {
+      background: #ff5722;
+      color: white;
+      border-color: #ff5722;
+    }
+
+    .pagination button:hover {
+      background: #ffe0d5;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div id="pizzaGrid" class="grid"></div>
+
+</div>
+
+<script>
+  // Данные о пиццах (30 штук = 5 страниц по 6)
+  const pizzas = [
+    { name: "Маргарита", price: 450, desc: "Томатный соус, моцарелла, базилик", img: "https://picsum.photos/400/300?1" },
+    { name: "Пепперони", price: 520, desc: "Пепперони, сыр, соус", img: "https://picsum.photos/400/300?2" },
+    { name: "Четыре сыра", price: 600, desc: "Моцарелла, дорблю, пармезан", img: "https://picsum.photos/400/300?3" },
+    { name: "Гавайская", price: 550, desc: "Курица, ананасы, сыр", img: "https://picsum.photos/400/300?4" },
+    { name: "Мясная", price: 650, desc: "Говядина, бекон, салями", img: "https://picsum.photos/400/300?5" },
+    { name: "Вегетарианская", price: 480, desc: "Овощи, грибы, сыр", img: "https://picsum.photos/400/300?6" },
+
+    { name: "Барбекю", price: 620, desc: "Соус BBQ, курица, лук", img: "https://picsum.photos/400/300?7" },
+    { name: "Дьябло", price: 590, desc: "Острая колбаса, перец", img: "https://picsum.photos/400/300?8" },
+    { name: "Карбонара", price: 610, desc: "Бекон, сливочный соус", img: "https://picsum.photos/400/300?9" },
+    { name: "Морская", price: 700, desc: "Креветки, кальмары", img: "https://picsum.photos/400/300?10" },
+    { name: "Салями", price: 530, desc: "Салями, сыр, соус", img: "https://picsum.photos/400/300?11" },
+    { name: "Грибная", price: 490, desc: "Шампиньоны, сыр", img: "https://picsum.photos/400/300?12" },
+
+    { name: "Фермерская", price: 580, desc: "Овощи, ветчина", img: "https://picsum.photos/400/300?13" },
+    { name: "Сырный цыплёнок", price: 560, desc: "Курица, сырный соус", img: "https://picsum.photos/400/300?14" },
+    { name: "Мексиканская", price: 600, desc: "Фасоль, халапеньо", img: "https://picsum.photos/400/300?15" },
+    { name: "Тунец", price: 630, desc: "Тунец, лук, сыр", img: "https://picsum.photos/400/300?16" },
+    { name: "Итальянская", price: 540, desc: "Томаты, моцарелла", img: "https://picsum.photos/400/300?17" },
+    { name: "Бекон чиз", price: 610, desc: "Бекон, сыр, соус", img: "https://picsum.photos/400/300?18" },
+
+    { name: "Классическая", price: 470, desc: "Соус, сыр", img: "https://picsum.photos/400/300?19" },
+    { name: "Охотничья", price: 590, desc: "Колбаски, лук", img: "https://picsum.photos/400/300?20" },
+    { name: "Сливочная", price: 560, desc: "Сливки, курица", img: "https://picsum.photos/400/300?21" },
+    { name: "Терияки", price: 620, desc: "Курица терияки", img: "https://picsum.photos/400/300?22" },
+    { name: "Овощная", price: 450, desc: "Свежие овощи", img: "https://picsum.photos/400/300?23" },
+    { name: "Домашняя", price: 520, desc: "Ветчина, грибы", img: "https://picsum.photos/400/300?24" },
+
+    { name: "Болоньезе", price: 630, desc: "Мясной соус", img: "https://picsum.photos/400/300?25" },
+    { name: "Чили", price: 580, desc: "Острый перец", img: "https://picsum.photos/400/300?26" },
+    { name: "Гриль", price: 650, desc: "Мясо гриль", img: "https://picsum.photos/400/300?27" },
+    { name: "Сыр +", price: 590, desc: "4 вида сыра", img: "https://picsum.photos/400/300?28" },
+    { name: "Микс", price: 610, desc: "Ассорти", img: "https://picsum.photos/400/300?29" },
+    { name: "Премиум", price: 750, desc: "Авторская пицца", img: "https://picsum.photos/400/300?30" }
+  ];
+
+  const itemsPerPage = 6; // 5 страниц
+  let currentPage = 1;
+
+  const grid = document.getElementById("pizzaGrid");
+  const pagination = document.getElementById("pagination");
+
+
+  function renderPizzas() {
+    grid.innerHTML = "";
+
+    const start = (currentPage - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+
+    const pageItems = pizzas.slice(start, end);
+
+    pageItems.forEach(pizza => {
+      const card = document.createElement("div");
+      card.className = "card";
+
+      card.innerHTML = `
+        <img src="${pizza.img}" alt="${pizza.name}">
+        <h3>${pizza.name}</h3>
+        <p>${pizza.desc}</p>
+        <div class="price">${pizza.price} ₽</div>
+        <button class="btn">В корзину</button>
+      `;
+
+      grid.appendChild(card);
+    });
+  }
+
+
+  function renderPagination() {
+    pagination.innerHTML = "";
+
+    const pages = Math.ceil(pizzas.length / itemsPerPage);
+
+    // Кнопка "Назад"
+    const prevBtn = document.createElement("button");
+    prevBtn.textContent = "←";
+    prevBtn.disabled = currentPage === 1;
+
+    prevBtn.addEventListener("click", () => {
+      if (currentPage > 1) {
+        currentPage--;
+        renderPizzas();
+        renderPagination();
+      }
+    });
+
+    pagination.appendChild(prevBtn);
+
+
+    // Номера страниц
+    for (let i = 1; i <= pages; i++) {
+      const btn = document.createElement("button");
+      btn.textContent = i;
+
+      if (i === currentPage) {
+        btn.classList.add("active");
+      }
+
+      btn.addEventListener("click", () => {
+        currentPage = i;
+        renderPizzas();
+        renderPagination();
+      });
+
+      pagination.appendChild(btn);
+    }
+
+
+    // Кнопка "Вперёд"
+    const nextBtn = document.createElement("button");
+    nextBtn.textContent = "→";
+    nextBtn.disabled = currentPage === pages;
+
+    nextBtn.addEventListener("click", () => {
+      if (currentPage < pages) {
+        currentPage++;
+        renderPizzas();
+        renderPagination();
+      }
+    });
+
+    pagination.appendChild(nextBtn);
+  }
+
+
+  // Инициализация
+  renderPizzas();
+  renderPagination();
+</script>
+
+</body>
+</html>
