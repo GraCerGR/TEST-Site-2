@@ -1,5 +1,5 @@
 {
-  "testPageHasTitle": "check",
+  "testPageHasTitle": "fail",
   "testHeaderExists": "check",
   "testPaginationWorks": "fail"
 }
